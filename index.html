@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <div class="header-top">
+        <h1>Leaderboard</h1>
+        <div class="header-date" id="header-date"></div>
+      </div>
+      <div class="header-meta-row" id="header-meta"></div>
+    </header>
+
+    <section id="rules-section">
+      <div class="section-label">Rules</div>
+      <div class="rules-wrap">
+        <ol id="rules-list"></ol>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Ranking</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Score</th>
+              <th>Q / day</th>
+              <th>Remaining</th>
+              <th>Progress</th>
+            </tr>
+          </thead>
+          <tbody id="ranking-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Breakdown</div>
+      <div class="cards-wrap">
+        <div class="cards-grid" id="cards-grid"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
