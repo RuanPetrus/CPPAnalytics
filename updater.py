@@ -6,6 +6,8 @@ from core import Bucket_Range
 from atcoder import update_atcoder
 from cses import update_cses
 
+from cf import update_cf_contest
+
 atcoder_problem_ranges = [
     Bucket_Range(low=1200, high=1600, max_count=50),
     Bucket_Range(low=1600, high=2000, max_count=150),
@@ -26,8 +28,20 @@ cses_rating_ranges = [
     Bucket_Range(low=0, high=1, max_count=0),
 ]
 
-begin_date = datetime(year=2025, month=1, day=1)
-deadline = datetime(year=2025, month=12, day=31)
+cf_problem_ranges = [
+    Bucket_Range(low=1200, high=1600, max_count=50),
+    Bucket_Range(low=1600, high=2000, max_count=150),
+    Bucket_Range(low=2000, high=100000, max_count=1000000),
+]
+
+cf_rating_ranges = [
+    Bucket_Range(low=1200, high=1600, max_count=10),
+    Bucket_Range(low=1600, high=2000, max_count=20),
+    Bucket_Range(low=2000, high=100000, max_count=30),
+]
+
+begin_date = datetime(year=2026, month=1, day=1)
+deadline = datetime(year=2026, month=6, day=30)
 
 rules = [
     "Todas as questões do CSES contam.",
@@ -49,6 +63,9 @@ def main() -> None:
     cses_handles = list(set(r.get("cses", "").strip() for r in users_table))
     cses_data = update_cses(cses_handles, begin_date, cses_problem_ranges, cses_rating_ranges)
 
+    cf_handles = list(set(r.get("codeforces", "").strip() for r in users_table))
+    cf_data = update_cf_contest(cf_handles, begin_date, cf_problem_ranges, cf_rating_ranges)
+
     competitors_data = [
         {
             "nome": user["nome"],
@@ -56,6 +73,7 @@ def main() -> None:
             "scores_sources": {
                 "atcoder" : atcoder_data[user["atcoder"]],
                 "cses" : cses_data[user["cses"]],
+                "codeforces" : cf_data[user["codeforces"]],
             }
         }
         for user in users_table
