@@ -8,20 +8,22 @@ from cses import update_cses
 
 from cf import update_cf_contest
 
+inf = 10**9
+
 atcoder_problem_ranges = [
-    Bucket_Range(low=1200, high=1600, max_count=50),
-    Bucket_Range(low=1600, high=2000, max_count=150),
-    Bucket_Range(low=2000, high=100000, max_count=1000000),
+    Bucket_Range(low=1200, high=1600, max_count=inf, points=10),
+    Bucket_Range(low=1600, high=2000, max_count=inf, points=20),
+    Bucket_Range(low=2000, high=100000, max_count=inf, points=30),
 ]
 
 atcoder_rating_ranges = [
-    Bucket_Range(low=1200, high=1600, max_count=10),
-    Bucket_Range(low=1600, high=2000, max_count=20),
-    Bucket_Range(low=2000, high=100000, max_count=30),
+    Bucket_Range(low=1200, high=1600, max_count=0),
+    Bucket_Range(low=1600, high=2000, max_count=0),
+    Bucket_Range(low=2000, high=100000, max_count=0),
 ]
 
 cses_problem_ranges = [
-    Bucket_Range(low=0, high=1, max_count=300),
+    Bucket_Range(low=0, high=1, max_count=300, points=1),
 ]
 
 cses_rating_ranges = [
@@ -29,24 +31,23 @@ cses_rating_ranges = [
 ]
 
 cf_problem_ranges = [
-    Bucket_Range(low=1200, high=1600, max_count=50),
-    Bucket_Range(low=1600, high=2000, max_count=150),
-    Bucket_Range(low=2000, high=100000, max_count=1000000),
+    Bucket_Range(low=1200, high=1600, max_count=inf, points=10),
+    Bucket_Range(low=1600, high=2000, max_count=inf, points=20),
+    Bucket_Range(low=2000, high=100000, max_count=inf, points=30),
 ]
 
 cf_rating_ranges = [
-    Bucket_Range(low=1200, high=1600, max_count=10),
-    Bucket_Range(low=1600, high=2000, max_count=20),
-    Bucket_Range(low=2000, high=100000, max_count=30),
+    Bucket_Range(low=1200, high=1600, max_count=0),
+    Bucket_Range(low=1600, high=2000, max_count=0),
+    Bucket_Range(low=2000, high=100000, max_count=0),
 ]
 
 begin_date = datetime(year=2026, month=1, day=1)
 deadline = datetime(year=2026, month=6, day=30)
 
 rules = [
-    "Todas as questões do CSES contam.",
-    "Pro Atcoder até 50 questões entre 1200–1599, até 150 entre 1600–1999, e livre acima de 1999.",
-    "Pontucao por rating no Atcoder: acima de 1200 no atcoder ganham 10 pontos, acima de 1600 no atcoder ganham 20 pontos, acima de 2000 no atcoder ganham 30 pontos"
+    "Todas as questões do CSES valem 1 ponto.",
+    "Pontuação por rating no Atcoder e Codeforces: acima de 1200 vale 10 pontos, acima de 1600 vale 20 pontos, acima de 2000 vale 30 pontos"
 ]
 
 def load_csv(path: str) -> list[dict]:

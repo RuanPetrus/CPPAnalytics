@@ -34,14 +34,16 @@ def get_all_contest_submissions(handle: str, date: datetime) -> set[tuple[str, i
         results.add((pid, rating))
     return results
 
-def get_contest_problem_buckets(handle: str, date: datetime, bucket_ranges: list[Bucket_Range]) -> dict[str, int]:
+def get_contest_problem_buckets(handle: str, date: datetime, bucket_ranges: list[Bucket_Range]) -> dict[Bucket_Range, int]:
     ac_problems = get_all_contest_submissions(handle, date)
 
-    buckets: dict[str, int] = {}
+    # Dictionary now uses the Bucket_Range object as the key
+    buckets: dict[Bucket_Range, int] = {} 
     for (pid, diff) in ac_problems:
         b = get_bucket_from_diff(diff, bucket_ranges)
         if b:
-            buckets[str(b)] = min(buckets.get(str(b), 0) + 1, b.max_count)
+            # We use 'b' directly instead of 'str(b)'
+            buckets[b] = min(buckets.get(b, 0) + 1, b.max_count)
 
     return buckets
 
@@ -53,15 +55,18 @@ def get_max_rating(handle: str) -> int:
     info = json.loads(gotjson.text)['result'][0]
     return int(info['maxRating'])
 
-def update_cf_contest(handles: list[str], date: datetime, problem_buckets: list[Bucket_Range], rating_buckets: Bucket_Range) -> dict[str, dict]:
+def update_cf_contest(handles: list[str], date: datetime, problem_buckets: list[Bucket_Range], rating_buckets: list[Bucket_Range]) -> dict[str, dict]:
     cf_data = {}
     for h in handles:
         buckets = get_contest_problem_buckets(h, date, problem_buckets)
+        
         questions_score = 0
-        for b in buckets:
-            questions_score += buckets[b]
+        # Iterate through the bucket objects and their problem counts
+        for b, count in buckets.items():
+            # Multiply the number of problems by the points they are worth
+            questions_score += count * b.points 
 
-        max_rating =  get_max_rating(h)
+        max_rating = get_max_rating(h)
         max_rating_score = 0
         b = get_bucket_from_diff(max_rating, rating_buckets)
         if b:
