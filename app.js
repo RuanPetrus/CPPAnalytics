@@ -21,8 +21,9 @@ async function init() {
   }
 
   function medal(score) {
-    if (score > 400) return '🥇';
-    if (score > 200) return '🥈';
+    if (score > 3000) return '🥇';
+    if (score > 2000) return '🥈';
+    if (score > 1000) return '🥉';
     return '';
   }
 

@@ -43,7 +43,7 @@ def get_all_submissions(handle: str, date: datetime) -> dict:
         time.sleep(1.1)
     return subs
 
-def get_problem_buckets(handle: str, date: datetime, problems_info: dict[str, int], bucket_ranges: list[Bucket_Range]) -> dict[str, int]:
+def get_problem_buckets(handle: str, date: datetime, problems_info: dict[str, int], bucket_ranges: list[Bucket_Range]) -> dict[Bucket_Range, int]:
     submissions = get_all_submissions(handle, date)
 
     ac_problems_id = set(
@@ -52,12 +52,14 @@ def get_problem_buckets(handle: str, date: datetime, problems_info: dict[str, in
         if s["result"] == "AC"
     )
 
-    buckets: dict[str, int] = {}
+    # Dictionary now uses the Bucket_Range object as the key
+    buckets: dict[Bucket_Range, int] = {}
     for pid in ac_problems_id:
         diff = problems_info.get(pid, 0)
         b = get_bucket_from_diff(diff, bucket_ranges)
         if b:
-            buckets[str(b)] = min(buckets.get(str(b), 0) + 1, b.max_count)
+            # We use 'b' directly instead of 'str(b)'
+            buckets[b] = min(buckets.get(b, 0) + 1, b.max_count)
 
     return buckets
 
@@ -69,15 +71,18 @@ def get_max_rating(handle: str) -> int:
         return 0
     return int(m.group(1))
 
-def update_atcoder(handles: list[str], date: datetime, problem_buckets: list[Bucket_Range], rating_buckets: Bucket_Range) -> dict[str, dict]:
+def update_atcoder(handles: list[str], date: datetime, problem_buckets: list[Bucket_Range], rating_buckets: list[Bucket_Range]) -> dict[str, dict]:
     problems_info = get_problems_info()
 
     atcoder_data = {}
     for h in handles:
         buckets = get_problem_buckets(h, date, problems_info, problem_buckets)
+        
         questions_score = 0
-        for b in buckets:
-            questions_score += buckets[b]
+        # Iterate through the bucket objects and their problem counts
+        for b, count in buckets.items():
+            # Multiply the number of problems by the points they are worth
+            questions_score += count * b.points
 
         max_rating =  get_max_rating(h)
         max_rating_score = 0

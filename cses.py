@@ -39,29 +39,33 @@ def get_ac_problems(handle: str, browser):
                 results.append(i)
     return results
 
-def get_problem_buckets(handle: str, date: datetime, bucket_ranges: list[Bucket_Range], browser) -> dict[str, int]:
+def get_problem_buckets(handle: str, date: datetime, bucket_ranges: list[Bucket_Range], browser) -> dict[Bucket_Range, int]:
     ac_problems_id = get_ac_problems(handle, browser)
 
-    buckets: dict[str, int] = {}
+    # Dictionary now uses the Bucket_Range object as the key
+    buckets: dict[Bucket_Range, int] = {}
     for pid in ac_problems_id:
-        diff = 0
+        diff = 0 # CSES doesn't use difficulty ratings
         b = get_bucket_from_diff(diff, bucket_ranges)
         if b:
-            buckets[str(b)] = min(buckets.get(str(b), 0) + 1, b.max_count)
+            # We use 'b' directly instead of 'str(b)'
+            buckets[b] = min(buckets.get(b, 0) + 1, b.max_count)
 
     return buckets
 
-def update_cses(handles: list[str], date: datetime, problem_buckets: list[Bucket_Range], rating_buckets: Bucket_Range) -> dict[str, dict]:
+def update_cses(handles: list[str], date: datetime, problem_buckets: list[Bucket_Range], rating_buckets: list[Bucket_Range]) -> dict[str, dict]:
     browser = login()
     cses_data = {}
     for h in handles:
         buckets = get_problem_buckets(h, date, problem_buckets, browser)
+        
         questions_score = 0
-        for b in buckets:
-            questions_score += buckets[b]
+        # Iterate through the bucket objects and multiply by points
+        for b, count in buckets.items():
+            questions_score += count * b.points
 
         cses_data[h] = {
-            "rating_score" : 0,
+            "rating_score" : 0, # CSES doesn't have user ratings
             "questions_score" : questions_score,
         }
     return cses_data
