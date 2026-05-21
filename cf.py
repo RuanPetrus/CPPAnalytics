@@ -16,7 +16,7 @@ def get_all_contest_submissions(handle: str, date: datetime) -> set[tuple[str, i
     info = json.loads(gotjson.text)['result']
     results = set()
     for submission in info:
-        if submission['verdict'] != 'OK' or submission['creationTimeSeconds'] < unix_second:
+        if not 'verdict' in submission or submission['verdict'] != 'OK' or submission['creationTimeSeconds'] < unix_second:
             continue  #not AC or too old
         problem_info = submission['problem']
         pid = problem_info['index']
@@ -53,7 +53,8 @@ def get_max_rating(handle: str) -> int:
         raise Exception(handle)
     time.sleep(2)
     info = json.loads(gotjson.text)['result'][0]
-    return int(info['maxRating'])
+    if 'maxRating' in info: return int(info['maxRating'])
+    else: return 0
 
 def update_cf_contest(handles: list[str], date: datetime, problem_buckets: list[Bucket_Range], rating_buckets: list[Bucket_Range]) -> dict[str, dict]:
     cf_data = {}
